@@ -15,7 +15,10 @@ final class RectorDrupalConfigurator {
     $parameters = $containerConfigurator->parameters();
 
     $drupalFinder = new DrupalFinder();
-    $drupalFinder->locateRoot($locateDrupalRootFrom);
+    // $drupalFinder->getDrupalRoot() can return FALSE, see $drupalFinder->locateRoot().
+    if (!$drupalFinder->locateRoot($locateDrupalRootFrom)) {
+      throw new \RuntimeException(sprintf('Unable to identify Drupal root from "%s".', $locateDrupalRootFrom));
+    }
     $drupalRoot = $drupalFinder->getDrupalRoot();
 
     // Autoloading Drupal related files is a complex and complicated task,
