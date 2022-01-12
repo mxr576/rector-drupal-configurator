@@ -1,0 +1,27 @@
+{
+    "name": "mxr576/rector-drupal-configurator",
+    "description": "Configures Rector to understand a Drupal 8+ codebase.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "Rector",
+        "Drupal"
+    ],
+    "authors": [
+        {
+            "name": "Dezső Biczó",
+            "email": "mxr576@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4.0 || ~8.0.0",
+        "rector/rector": "~0.12.12",
+        "webflo/drupal-finder": "^1.2",
+        "mglaman/drupal-static-autoloader": "~0.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "mxr576\\RectorDrupalConfigurator\\": "src/"
+        }
+    }
+}
