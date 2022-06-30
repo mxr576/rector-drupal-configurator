@@ -4,16 +4,14 @@ namespace mxr576\RectorDrupalConfigurator;
 
 use Composer\Autoload\ClassLoader;
 use DrupalFinder\DrupalFinder;
+use Rector\Config\RectorConfig;
 use Rector\Core\Configuration\Option;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use mglaman\DrupalStaticAutoloader\Autoloader as DrupalAutoloader;
 
 final class RectorDrupalConfigurator {
 
-  public function configure(ContainerConfigurator $containerConfigurator, string $locateDrupalRootFrom = __DIR__): void  {
-    // get parameters
-    $parameters = $containerConfigurator->parameters();
-
+  public function configure(RectorConfig $config, string $locateDrupalRootFrom = __DIR__): void {
     $drupalFinder = new DrupalFinder();
     // $drupalFinder->getDrupalRoot() can return FALSE, see $drupalFinder->locateRoot().
     if (!$drupalFinder->locateRoot($locateDrupalRootFrom)) {
@@ -23,21 +21,16 @@ final class RectorDrupalConfigurator {
 
     // Autoloading Drupal related files is a complex and complicated task,
     // let's leave it to a dedicated library instead of using Rector's built-in
-    // Option::AUTOLOAD_PATHS approach.
+    // solution.
     // @see https://github.com/palantirnet/drupal-rector/blob/fd30e68a5f46fb3f6d860a093e36b3cf2f90a8ba/rector.php#L20
     $drupalAutoloader = DrupalAutoloader::getLoader($drupalRoot);
     $drupalAutoloader->register();
 
     $this->fixPhpUnitCompatibility($drupalRoot);
-    // @todo What if a Drupal core would provide this list that keeps
-    // popping up in different libraries.
-    // @see https://github.com/mglaman/phpstan-drupal/blob/82c0c89ccd681f0b523afe90ea628e4fcb6753b1/extension.neon#L7
-    $parameters->set(Option::FILE_EXTENSIONS, ['php', 'module', 'theme', 'install', 'profile', 'inc', 'engine']);
 
-    // Some sane defaults to follow Drupal CS better.
-    $parameters->set(Option::AUTO_IMPORT_NAMES, true);
-    $parameters->set(Option::IMPORT_SHORT_CLASSES, false);
-    $parameters->set(Option::IMPORT_DOC_BLOCKS, false);
+    $config->fileExtensions(['php', 'module', 'theme', 'install', 'profile', 'inc', 'engine']);
+    $config->importNames(TRUE, FALSE);
+    $config->importShortClasses(FALSE);
   }
 
   /**

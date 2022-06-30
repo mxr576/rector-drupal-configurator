@@ -13,7 +13,7 @@ and call
 
 ```php
     $drc = new \mxr576\RectorDrupalConfigurator\RectorDrupalConfigurator();
-    $drc->configure($containerConfigurator);
+    $drc->configure($rectorConfig);
 ```
 
 at the beginning of the generated function in `rector.php`. See [example.rector.php](example.rector.php).
